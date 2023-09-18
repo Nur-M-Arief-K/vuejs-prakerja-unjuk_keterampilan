@@ -1,43 +1,70 @@
 <template>
   <v-container fluid>
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="1024"
-    >
+    <v-dialog v-model="isTambahKegiatanFormShown" persistent width="1024">
       <template v-slot:activator="{ props }">
-        <v-btn
-          v-bind="props"
-        >
-          + Tambahkan kegiatan
-        </v-btn>
+        <v-btn v-bind="props"> + Tambahkan kegiatan </v-btn>
       </template>
-      <formulir-tambah-kegiatan :submit="() => dialog = false" :batalkan="() => dialog = false" />
+      <formulir-tambah-kegiatan
+        :closeForm="
+          () => (isTambahKegiatanFormShown = !isTambahKegiatanFormShown)
+        "
+      />
     </v-dialog>
-    
+    <br>
+    <br>
     <v-row align="stretch">
       <v-col cols="12" md="6">
-        <papan-kategori-kegiatan title="Keinginan" kategoriKegiatan="keinginan" />
+        <papan-kategori-kegiatan
+          judulKategori="Keinginan"
+          kategoriKegiatan="Keinginan"
+          :daftarKegiatan="daftarKeinginan"
+        />
       </v-col>
       <v-col cols="12" md="6">
-        <papan-kategori-kegiatan title="Berjalan" kategoriKegiatan="berjalan" />
+        <papan-kategori-kegiatan
+          judulKategori="Berjalan"
+          kategoriKegiatan="Berjalan"
+          :daftarKegiatan="daftarBerjalan"
+        />
       </v-col>
       <v-col cols="12" md="6">
-        <papan-kategori-kegiatan title="Selesai" kategoriKegiatan="selesai" />
+        <papan-kategori-kegiatan
+          judulKategori="Selesai"
+          kategoriKegiatan="Selesai"
+          :daftarKegiatan="daftarSelesai"
+        />
       </v-col>
       <v-col cols="12" md="6">
-        <papan-kategori-kegiatan title="Ditunda" kategoriKegiatan="ditunda" />
+        <papan-kategori-kegiatan
+          judulKategori="Ditunda"
+          kategoriKegiatan="Ditunda"
+          :daftarKegiatan="daftarDitunda"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-// @ is an alias to /src
-import PapanKategoriKegiatan from '@/components/PapanKategoriKegiatan.vue';
-import FormulirTambahKegiatan from '@/components/FormulirTambahKegiatan.vue';
-import { ref } from 'vue'
+import PapanKategoriKegiatan from "@/components/PapanKategoriKegiatan.vue";
+import FormulirTambahKegiatan from "@/components/FormulirTambahKegiatan.vue";
+import { ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
 
-const dialog= ref(false)
+const store = useStore();
 
+const isTambahKegiatanFormShown = ref(false);
+
+const daftarKeinginan = computed(() =>
+  store.getters.getDaftarKegiatan("Keinginan")
+);
+const daftarBerjalan = computed(() =>
+  store.getters.getDaftarKegiatan("Berjalan")
+);
+const daftarSelesai = computed(() =>
+  store.getters.getDaftarKegiatan("Selesai")
+);
+const daftarDitunda = computed(() =>
+  store.getters.getDaftarKegiatan("Ditunda")
+);
 </script>
